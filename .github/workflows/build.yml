@@ -1,0 +1,38 @@
+name: Build npx-cleaner Executable
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch: # Allows manual trigger from the GitHub Actions tab
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: Install System Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Compile Standalone Executable via PyInstaller
+      run: |
+        pyinstaller --onefile --noconsole --name="npx-cleaner" npx_cleaner.py
+
+    - name: Upload Compiled Artifact to GitHub
+      uses: actions/upload-artifact@v4
+      with:
+        name: npx-cleaner-windows
+        path: dist/npx-cleaner.exe
+        if-no-files-found: error
