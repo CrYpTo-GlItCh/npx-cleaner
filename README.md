@@ -91,15 +91,6 @@ Your compiled binary will be generated at **`dist/npx-cleaner.exe`**.
 
 ---
 
-<div align="center">
-
-**ENGINEERED BY `CICADA` FOR THE `NUPIXEL` COMMUNITY**  
-*Licensed under the MIT License*
-
-</div>
-
----
-
 ## ⚡ SUPPORT PROJECT EVOLUTION
 
 *Fuel our hardware and game servers.*
