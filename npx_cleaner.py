@@ -38,11 +38,96 @@ class NPXCleanerApp:
         self.root.resizable(False, False)
         self.root.configure(bg=BG_DARK)
 
-        local_app = os.environ.get("LOCALAPPDATA", "")
+        local_app = os.environ.get("LOCALAPPDATA") or os.path.expanduser(os.path.join("~", "AppData", "Local"))
         self.default_paths = {
             "legacy": self.detect_legacy_path(local_app),
             "enhanced": self.detect_enhanced_path(local_app)
         }
+
+        self.custom_paths = self.load_config()
+        self.targets = {"legacy": {}, "enhanced": {}}
+
+        legacy_init = self.custom_paths.get("legacy") or self.default_paths["legacy"]
+        enhanced_init = self.custom_paths.get("enhanced") or self.default_paths["enhanced"]
+
+        self.path_vars = {
+            "legacy": tk.StringVar(value=str(legacy_init)),
+            "enhanced": tk.StringVar(value=str(enhanced_init))
+        }
+        self.path_status_lbls = {}
+
+        self.configure_styles()
+        self.setup_ui()
+        self.start_neon_flicker()
+        self.scan_all_caches()
+        self.check_running_processes()
+
+    def configure_styles(self):
+        style = ttk.Style()
+        style.theme_use("clam")
+
+        style.configure(
+            "TNotebook",
+            background=BG_DARK,
+            borderwidth=0,
+            tabmargins=[0, 0, 0, 0]
+        )
+        style.configure(
+            "TNotebook.Tab",
+            background=BG_PANEL,
+            foreground=TEXT_MUTED,
+            padding=[14, 6],
+            font=("Consolas", 10, "bold"),
+            borderwidth=1
+        )
+        style.map(
+            "TNotebook.Tab",
+            background=[("selected", BG_INPUT)],
+            foreground=[("selected", NEON_CYAN)],
+            expand=[("selected", [1, 1, 1, 0])]
+        )
+
+        style.configure("Dark.TFrame", background=BG_PANEL)
+        style.configure(
+            "Cyber.TCheckbutton",
+            background=BG_PANEL,
+            foreground=TEXT_LIGHT,
+            font=("Consolas", 9),
+            indicatorcolor=BG_INPUT,
+            indicatorrelief="flat"
+        )
+        style.map(
+            "Cyber.TCheckbutton",
+            background=[("active", BG_PANEL)],
+            foreground=[("active", NEON_CYAN), ("selected", NEON_CYAN)],
+            indicatorcolor=[("selected", NEON_PINK), ("active", NEON_CYAN)]
+        )
+
+    def detect_legacy_path(self, local_app):
+        """Checks standard %LOCALAPPDATA% paths for FiveM Legacy."""
+        candidates = [
+            os.path.join(local_app, "FiveM", "FiveM.app", "data"),
+            os.path.join(local_app, "FiveM", "data"),
+            os.path.join(local_app, "FiveM")
+        ]
+        for path in candidates:
+            if os.path.exists(path):
+                return path
+        return candidates[0]
+
+    def detect_enhanced_path(self, local_app):
+        """Checks standard %LOCALAPPDATA% paths for FiveM for GTAV Enhanced."""
+        candidates = [
+            os.path.join(local_app, "FiveM for GTAV Enhanced", "FiveM.app", "data"),
+            os.path.join(local_app, "FiveM for GTAV Enhanced", "data"),
+            os.path.join(local_app, "FiveM for GTAV Enhanced")
+        ]
+        for path in candidates:
+            if os.path.exists(path):
+                return path
+        return candidates[0]
+
+
 
         self.custom_paths = self.load_config()
         self.targets = {"legacy": {}, "enhanced": {}}
