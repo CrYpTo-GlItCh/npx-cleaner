@@ -1,14 +1,75 @@
-<img src="banner.svg" width="100%" alt="NPX-CLEANER NuPixel Cyberpunk Banner"/>
+<svg width="100%" height="180" viewBox="0 0 1200 180" xmlns="http://w3.org">
+  <defs>
+    <style>
+      @keyframes flickerCyan {
+        0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+          opacity: 1;
+          filter: drop-shadow(0 0 8px #00f3ff) drop-shadow(0 0 20px #00f3ff);
+        }
+        20%, 24%, 55% {
+          opacity: 0.45;
+          filter: none;
+        }
+      }
+      @keyframes flickerPink {
+        0%, 40%, 42%, 80%, 82%, 100% {
+          opacity: 1;
+          filter: drop-shadow(0 0 6px #ff007f) drop-shadow(0 0 16px #ff007f);
+        }
+        41%, 81% {
+          opacity: 0.5;
+          filter: none;
+        }
+      }
+      .title {
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-weight: 900;
+        font-size: 64px;
+        letter-spacing: 10px;
+        fill: #00f3ff;
+        animation: flickerCyan 5s infinite;
+      }
+      .brackets {
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-weight: 900;
+        font-size: 64px;
+        fill: #ff007f;
+        animation: flickerPink 4s infinite;
+      }
+      .subtitle {
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: 4px;
+        fill: #00ff41;
+      }
+      .grid {
+        stroke: #151524;
+        stroke-width: 1;
+      }
+    </style>
+    <pattern id="cyberGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" class="grid"/>
+    </pattern>
+  </defs>
 
-<div align="center">
+  <!-- Dark Cyberpunk Background -->
+  <rect width="1200" height="180" rx="8" fill="#07070c"/>
+  <rect width="1200" height="180" rx="8" fill="url(#cyberGrid)"/>
 
-### `SYS.ARCHITECT: CICADA` &nbsp;//&nbsp; `BUILD: LEGACY + ENHANCED (GEN9)`
+  <!-- Neon Outer Border -->
+  <rect x="3" y="3" width="1194" height="174" rx="6" fill="none" stroke="#00f3ff" stroke-width="2"/>
+  <line x1="20" y1="168" x2="1180" y2="168" stroke="#ff007f" stroke-width="2"/>
 
-[![Platform](https://shields.io)](https://github.com)
-[![Python](https://shields.io)](https://python.org)
-[![Theme](https://shields.io)](https://nupixel.xyz)
-[![License](https://shields.io)](LICENSE)
+  <!-- Centered Glowing Title -->
+  <text x="600" y="95" text-anchor="middle">
+    <tspan class="brackets">[ </tspan>
+    <tspan class="title">NPX-CLEANER</tspan>
+    <tspan class="brackets"> ]</tspan>
+  </text>
 
-*A high-contrast, neon-infused Windows utility engineered to purge corrupted FiveM caches, terminate locked client threads, and boost frame stability across both **FiveM Legacy** and **FiveM Enhanced (Gen9)**.*
-
-</div>
+  <!-- Matrix Sub-header -->
+  <text x="600" y="138" text-anchor="middle" class="subtitle">
+    NUPIXEL // NEXT-GEN FIVEM CACHE PURGE &amp; OPTIMIZER // BY CICADA
+  </text>
+</svg>
