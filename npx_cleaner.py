@@ -84,7 +84,6 @@ class NPXCleanerApp:
         )
 
     def detect_legacy_path(self, local_app):
-        """Checks standard AppData paths for FiveM Legacy."""
         candidates = [
             os.path.join(local_app, "FiveM", "FiveM.app", "data"),
             os.path.join(local_app, "FiveM", "data"),
@@ -96,7 +95,6 @@ class NPXCleanerApp:
         return candidates[0]
 
     def detect_enhanced_path(self, local_app):
-        """Checks common AppData folder names used by FiveM Enhanced."""
         candidates = [
             os.path.join(local_app, "FiveM Enhanced", "FiveM.app", "data"),
             os.path.join(local_app, "FiveM_Enhanced", "FiveM.app", "data"),
@@ -132,7 +130,6 @@ class NPXCleanerApp:
             self.log(f"[WARN] Could not save path settings: {e}", tag="pink")
 
     def setup_ui(self):
-        # Top Neon Banner Frame
         banner_frame = tk.Frame(self.root, bg=BG_PANEL, highlightbackground=NEON_CYAN, highlightthickness=1, pady=10)
         banner_frame.pack(fill="x", padx=16, pady=(14, 8))
 
@@ -149,7 +146,6 @@ class NPXCleanerApp:
         self.sub_banner = tk.Label(banner_frame, text="SYS.ARCHITECT: CICADA  |  DUAL LEGACY & GEN9 CACHE PROTOCOL", font=("Consolas", 8, "bold"), bg=BG_PANEL, fg=TEXT_MUTED)
         self.sub_banner.pack(pady=(3, 0))
 
-        # Process Watchdog Panel
         self.proc_frame = tk.Frame(self.root, bg=BG_PANEL, highlightbackground=NEON_PINK, highlightthickness=1, padx=12, pady=8)
         self.proc_frame.pack(fill="x", padx=16, pady=6)
 
@@ -162,7 +158,6 @@ class NPXCleanerApp:
         self.kill_btn = tk.Button(self.proc_frame, text="[ TERMINATE RUNNING FIVEM / GTA PROCESSES ]", bg=BG_INPUT, fg=NEON_PINK, activebackground=NEON_PINK, activeforeground=BG_DARK, font=("Consolas", 9, "bold"), relief="flat", highlightbackground=NEON_PINK, highlightthickness=1, cursor="hand2", command=self.kill_processes)
         self.kill_btn.pack(fill="x", ipady=3)
 
-        # Notebook Tabs for Legacy vs Enhanced
         self.notebook = ttk.Notebook(self.root)
         self.notebook.pack(fill="x", padx=16, pady=8)
 
@@ -175,7 +170,6 @@ class NPXCleanerApp:
         self.build_client_tab(self.tab_legacy, "legacy")
         self.build_client_tab(self.tab_enhanced, "enhanced")
 
-        # Shared Account / Entitlements Panel
         self.shared_frame = tk.Frame(self.root, bg=BG_PANEL, highlightbackground=NEON_CYAN_DIM, highlightthickness=1, padx=12, pady=7)
         self.shared_frame.pack(fill="x", padx=16, pady=4)
 
@@ -194,11 +188,9 @@ class NPXCleanerApp:
         self.entitlement_lbl = tk.Label(ent_row, text="CALCULATING...", fg=TEXT_MUTED, bg=BG_PANEL, font=("Consolas", 9))
         self.entitlement_lbl.pack(side="right")
 
-        # Total Payload Size Readout
         self.total_lbl = tk.Label(self.root, text="PAYLOAD SELECTED: 0.00 MB", font=("Consolas", 11, "bold"), bg=BG_DARK, fg=NEON_CYAN)
         self.total_lbl.pack(pady=6)
 
-        # Matrix Terminal Logger
         term_border = tk.Frame(self.root, bg=BG_DARK, highlightbackground=MATRIX_GREEN, highlightthickness=1)
         term_border.pack(fill="x", padx=16, pady=4)
 
@@ -214,7 +206,6 @@ class NPXCleanerApp:
         self.log("BOOT SEQUENCE COMPLETE // NUPIXEL UI LOADED.", tag="cyan")
         self.log("READY FOR CACHE PURGE. CUSTOMIZE PATHS OR EXECUTE.", tag="green")
 
-        # Bottom Action Controls
         btn_frame = tk.Frame(self.root, bg=BG_DARK)
         btn_frame.pack(fill="x", padx=16, pady=(10, 14))
 
@@ -228,7 +219,6 @@ class NPXCleanerApp:
         container = tk.Frame(parent, bg=BG_PANEL, highlightbackground=NEON_CYAN, highlightthickness=1, padx=10, pady=8)
         container.pack(fill="both", expand=True)
 
-        # Custom Directory Bar
         dir_frame = tk.Frame(container, bg=BG_PANEL, pady=4)
         dir_frame.pack(fill="x")
 
@@ -245,12 +235,10 @@ class NPXCleanerApp:
         reset_btn = tk.Button(dir_frame, text="RESET", bg=BG_INPUT, fg=NEON_PINK, activebackground=NEON_PINK, activeforeground=BG_DARK, font=("Consolas", 8, "bold"), relief="flat", highlightbackground=NEON_PINK, highlightthickness=1, cursor="hand2", command=lambda m=mode: self.reset_folder(m))
         reset_btn.pack(side="right", ipadx=6, ipady=1)
 
-        # Directory Status Indicator
         path_status = tk.Label(container, text="PROBING DIRECTORY...", font=("Consolas", 8, "bold"), bg=BG_PANEL, fg=TEXT_MUTED)
         path_status.pack(anchor="w", pady=(2, 6))
         self.path_status_lbls[mode] = path_status
 
-        # Cache Folder Checkboxes
         folders = [
             ("cache", "Main Client Cache [cache]", True),
             ("server-cache", "Server Assets Cache [server-cache]", True),
@@ -277,7 +265,6 @@ class NPXCleanerApp:
             }
 
     def start_neon_flicker(self):
-        """Creates a subtle cyberpunk neon sign flicker effect on the header."""
         def flicker_step():
             roll = random.random()
             if roll < 0.08:
@@ -397,7 +384,6 @@ class NPXCleanerApp:
                     else:
                         info["status_lbl"].config(text="EMPTY / NOT FOUND", fg=TEXT_MUTED)
 
-            # Scan DigitalEntitlements
             if os.path.exists(self.entitlement_path):
                 b, f = self.get_dir_size(self.entitlement_path)
                 self.entitlement_lbl.config(text=f"{f} files ({b / (1024 * 1024):.2f} MB)", fg=NEON_PINK if self.entitlement_var.get() else TEXT_LIGHT)
@@ -485,7 +471,6 @@ class NPXCleanerApp:
                             except Exception as e:
                                 self.log(f"[{mode.upper()}] FAILED TO TRASH {folder_key}: {e}", tag="pink")
 
-            # Purge DigitalEntitlements if selected
             if self.entitlement_var.get() and os.path.exists(self.entitlement_path):
                 b, f = self.get_dir_size(self.entitlement_path)
                 try:
