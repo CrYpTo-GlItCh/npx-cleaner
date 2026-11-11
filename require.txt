@@ -1,3 +1,7 @@
+# --- Core Application Dependencies ---
 psutil>=5.9.0
 send2trash>=1.8.0
+
+# --- Build & Compilation Dependencies ---
 pyinstaller>=6.0.0
+setuptools>=68.0.0
