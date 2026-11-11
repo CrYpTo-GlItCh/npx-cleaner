@@ -7,12 +7,6 @@ from tkinter import ttk, messagebox, filedialog
 import psutil
 from send2trash import send2trash
 
-try:
-    import pygame
-    PYGAME_AVAILABLE = True
-except ImportError:
-    PYGAME_AVAILABLE = False
-
 TARGET_PROCESSES = [
     "FiveM.exe",
     "FiveM_Enhanced.exe",
@@ -22,7 +16,6 @@ TARGET_PROCESSES = [
 ]
 
 CONFIG_FILE = "npx_cleaner_config.json"
-CHIPTUNE_URL = "https://cdns.framerusercontent.com/assets/2V5p18jR8q7JzQ4L9J6g8wM3c.mp3"
 
 # NuPixel / iO33 Cyberpunk Theme Palette
 BG_DARK = "#07070c"
@@ -236,7 +229,6 @@ class NPXCleanerApp:
             import time
             try:
                 import winsound
-                # Classic 8-bit arcade arpeggio notes (Frequency in Hz, Duration in ms)
                 notes = [
                     (523, 120), (659, 120), (784, 120), (1046, 200),
                     (784, 120), (659, 120), (523, 200), (392, 200)
@@ -246,15 +238,18 @@ class NPXCleanerApp:
                 
                 while getattr(self, 'audio_running', True):
                     for freq, duration in notes:
-                        if not getattr(self, 'audio_running', True) or getattr(self, 'is_muted', False):
+                        if not getattr(self, 'audio_running', True):
                             break
+                        while getattr(self, 'is_muted', False):
+                            time.sleep(0.2)
+                            if not getattr(self, 'audio_running', True):
+                                break
                         try:
                             winsound.Beep(freq, duration)
                         except Exception:
                             pass
                         time.sleep(0.05)
-                    # Pause between loop iterations
-                    for _ in range(20):
+                    for _ in range(25):
                         if not getattr(self, 'audio_running', True):
                             break
                         time.sleep(0.1)
