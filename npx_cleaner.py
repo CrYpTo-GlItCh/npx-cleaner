@@ -67,7 +67,6 @@ class NPXCleanerApp:
         style = ttk.Style()
         style.theme_use("clam")
         
-        # Larger readable notebook tabs
         style.configure("TNotebook", background=BG_DARK, borderwidth=0, tabmargins=[0, 0, 0, 0])
         style.configure("TNotebook.Tab", background=BG_PANEL, foreground=TEXT_MUTED, padding=[22, 12], font=("Consolas", 12, "bold"), borderwidth=1)
         style.map("TNotebook.Tab", 
@@ -132,7 +131,7 @@ class NPXCleanerApp:
             self.log(f"[WARN] Could not save path settings: {e}", tag="pink")
 
     def setup_ui(self):
-        banner_frame = tk.Frame(self.root, bg=BG_PANEL, highlightbackground=NEON_CYAN, highlightthickness=1, pady=12)
+        banner_frame = tk.Frame(self.root, bg=BG_PANEL, highlightbackground=NEON_CYAN, highlightthickness=2, pady=14)
         banner_frame.pack(fill="x", padx=16, pady=(14, 8))
 
         title_row = tk.Frame(banner_frame, bg=BG_PANEL)
@@ -148,18 +147,18 @@ class NPXCleanerApp:
         self.sub_banner = tk.Label(banner_frame, text="PUBLISHER: iO33  |  VERSION: 1.0.33  |  DUAL LEGACY & GEN9 CACHE PROTOCOL", font=("Consolas", 10, "bold"), bg=BG_PANEL, fg=TEXT_MUTED)
         self.sub_banner.pack(pady=(4, 0))
 
-        # Gateway Actions & Links Toolbar
+        # Main Gateway Toolbar
         gateway_bar = tk.Frame(banner_frame, bg=BG_PANEL)
-        gateway_bar.pack(pady=(10, 0))
+        gateway_bar.pack(pady=(12, 0))
 
-        nupixel_btn = tk.Button(gateway_bar, text="[ NUPIXEL.XYZ ]", bg=BG_INPUT, fg=NEON_CYAN, activebackground=NEON_CYAN, activeforeground=BG_DARK, font=("Consolas", 10, "bold"), relief="flat", highlightbackground=NEON_CYAN, highlightthickness=1, cursor="hand2", command=lambda: webbrowser.open("https://nupixel.xyz"))
-        nupixel_btn.pack(side="left", padx=6, ipadx=10, ipady=4)
+        nupixel_btn = tk.Button(gateway_bar, text="🌐 NUPIXEL.XYZ", bg=BG_INPUT, fg=NEON_CYAN, activebackground=NEON_CYAN, activeforeground=BG_DARK, font=("Consolas", 11, "bold"), relief="flat", highlightbackground=NEON_CYAN, highlightthickness=2, cursor="hand2", command=lambda: webbrowser.open("https://nupixel.xyz"))
+        nupixel_btn.pack(side="left", padx=8, ipadx=12, ipady=6)
 
-        connect_btn = tk.Button(gateway_bar, text=">> CONNECT SERVER <<", bg=BG_INPUT, fg=MATRIX_GREEN, activebackground=MATRIX_GREEN, activeforeground=BG_DARK, font=("Consolas", 10, "bold"), relief="flat", highlightbackground=MATRIX_GREEN, highlightthickness=1, cursor="hand2", command=lambda: webbrowser.open("cfx://connect/3yagxxz"))
-        connect_btn.pack(side="left", padx=6, ipadx=10, ipady=4)
+        connect_btn = tk.Button(gateway_bar, text="⚡ CONNECT SERVER", bg=BG_INPUT, fg=MATRIX_GREEN, activebackground=MATRIX_GREEN, activeforeground=BG_DARK, font=("Consolas", 11, "bold"), relief="flat", highlightbackground=MATRIX_GREEN, highlightthickness=2, cursor="hand2", command=lambda: webbrowser.open("cfx://connect/3yagxxz"))
+        connect_btn.pack(side="left", padx=8, ipadx=12, ipady=6)
 
-        donate_btn = tk.Button(gateway_bar, text="[ SUPPORT / DONATE ]", bg=BG_INPUT, fg=NEON_PINK, activebackground=NEON_PINK, activeforeground=BG_DARK, font=("Consolas", 10, "bold"), relief="flat", highlightbackground=NEON_PINK, highlightthickness=1, cursor="hand2", command=self.open_donation_window)
-        donate_btn.pack(side="left", padx=6, ipadx=10, ipady=4)
+        donate_btn = tk.Button(gateway_bar, text="💎 SUPPORT / DONATE", bg=BG_INPUT, fg=NEON_PINK, activebackground=NEON_PINK, activeforeground=BG_DARK, font=("Consolas", 11, "bold"), relief="flat", highlightbackground=NEON_PINK, highlightthickness=2, cursor="hand2", command=self.open_donation_window)
+        donate_btn.pack(side="left", padx=8, ipadx=12, ipady=6)
 
         self.proc_frame = tk.Frame(self.root, bg=BG_PANEL, highlightbackground=NEON_PINK, highlightthickness=1, padx=14, pady=10)
         self.proc_frame.pack(fill="x", padx=16, pady=6)
@@ -233,31 +232,35 @@ class NPXCleanerApp:
     def open_donation_window(self):
         d_win = tk.Toplevel(self.root)
         d_win.title("SUPPORT PROJECT EVOLUTION // DONATION GATEWAYS")
-        d_win.geometry("540x480")
+        d_win.geometry("640x680")
         d_win.resizable(False, False)
         d_win.configure(bg=BG_DARK)
 
-        tk.Label(d_win, text="SUPPORT NUPIXEL // iO33 ECOSYSTEM", font=("Consolas", 14, "bold"), bg=BG_DARK, fg=NEON_CYAN).pack(pady=(18, 6))
-        tk.Label(d_win, text="Click any gateway below to open or copy address to clipboard.", font=("Consolas", 9), bg=BG_DARK, fg=TEXT_MUTED).pack(pady=(0, 16))
+        tk.Label(d_win, text="💎 SUPPORT NUPIXEL // iO33 ECOSYSTEM", font=("Consolas", 16, "bold"), bg=BG_DARK, fg=NEON_CYAN).pack(pady=(20, 6))
+        tk.Label(d_win, text="Fuel our game servers and community infrastructure. Click to open or copy.", font=("Consolas", 10), bg=BG_DARK, fg=TEXT_MUTED).pack(pady=(0, 16))
 
         wallets = [
-            ("PayPal (FIAT / USD)", "https://paypal.me/iQuantum", "OPEN PAYPAL"),
-            ("Bitcoin (BTC)", "3JNvWL6hSaF3kMVKydfRhfrt82wXDDcaBV", "COPY BTC"),
-            ("Ethereum (ETH)", "0x314523ca487b9BDf158c2072701bdCfA89AbB0e2", "COPY ETH"),
-            ("USD Coin (USDC)", "0x4cc71b7c65eF753B8f497EBFb87eae40739a29F3", "COPY USDC"),
-            ("Dogecoin (DOGE)", "DDVRVa3BcTAb2UC7mEEXmT3wJmViKGMsP7", "COPY DOGE"),
-            ("Ripple (XRP) [Address]", "rw2ciyaNshpHe7bCHo4bRWq6pqqynnWKQg", "COPY XRP"),
-            ("Ripple (XRP) [Memo]", "4218899529", "COPY MEMO")
+            ("💳 PayPal (FIAT / USD)", "https://paypal.me/iQuantum", "OPEN PAYPAL"),
+            ("⚡ Bitcoin (BTC)", "3JNvWL6hSaF3kMVKydfRhfrt82wXDDcaBV", "COPY BTC"),
+            ("Ξ Ethereum (ETH)", "0x314523ca487b9BDf158c2072701bdCfA89AbB0e2", "COPY ETH"),
+            ("💲 USD Coin (USDC)", "0x4cc71b7c65eF753B8f497EBFb87eae40739a29F3", "COPY USDC"),
+            ("🐕 Dogecoin (DOGE)", "DDVRVa3BcTAb2UC7mEEXmT3wJmViKGMsP7", "COPY DOGE"),
+            ("🌊 Ripple (XRP) [Address]", "rw2ciyaNshpHe7bCHo4bRWq6pqqynnWKQg", "COPY XRP"),
+            ("🚨 Ripple (XRP) [MEMO REQUIRED]", "4218899529", "COPY MEMO")
         ]
 
         for title, val, action_text in wallets:
-            row = tk.Frame(d_win, bg=BG_PANEL, highlightbackground=NEON_CYAN_DIM, highlightthickness=1, padx=12, pady=8)
-            row.pack(fill="x", padx=22, pady=5)
+            row = tk.Frame(d_win, bg=BG_PANEL, highlightbackground=NEON_CYAN_DIM, highlightthickness=1, padx=16, pady=12)
+            row.pack(fill="x", padx=24, pady=6)
 
-            tk.Label(row, text=title, font=("Consolas", 10, "bold"), bg=BG_PANEL, fg=TEXT_LIGHT).pack(side="left")
+            tk.Label(row, text=title, font=("Consolas", 11, "bold"), bg=BG_PANEL, fg=TEXT_LIGHT).pack(side="left")
 
-            btn = tk.Button(row, text=action_text, bg=BG_INPUT, fg=NEON_PINK, activebackground=NEON_PINK, activeforeground=BG_DARK, font=("Consolas", 9, "bold"), relief="flat", highlightbackground=NEON_PINK, highlightthickness=1, cursor="hand2", command=lambda v=val, t=title: self.handle_donation_click(v, t))
-            btn.pack(side="right", ipadx=8, ipady=2)
+            btn_color = NEON_PINK if "MEMO" not in title else "#ff3333"
+            btn = tk.Button(row, text=action_text, bg=BG_INPUT, fg=btn_color, activebackground=btn_color, activeforeground=BG_DARK, font=("Consolas", 10, "bold"), relief="flat", highlightbackground=btn_color, highlightthickness=1, cursor="hand2", command=lambda v=val, t=title: self.handle_donation_click(v, t))
+            btn.pack(side="right", ipadx=10, ipady=4)
+
+        note_lbl = tk.Label(d_win, text="⚠️ NOTE: RIPPLE (XRP) TRANSFERS REQUIRE BOTH THE ADDRESS AND THE 4218899529 MEMO TAG TO CREDIT PROPERLY.", font=("Consolas", 8, "bold"), bg=BG_DARK, fg=NEON_PINK, wraplength=580, justify="center")
+        note_lbl.pack(pady=(14, 0))
 
     def handle_donation_click(self, val, title):
         if val.startswith("http"):
@@ -266,7 +269,8 @@ class NPXCleanerApp:
         else:
             self.root.clipboard_clear()
             self.root.clipboard_append(val)
-            messagebox.showinfo("COPIED TO CLIPBOARD", f"{title} address copied successfully:\n\n{val}")
+            extra_msg = "\n\n⚠️ (REMEMBER: MEMO IS REQUIRED FOR XRP TRANSFERS!)" if "MEMO" in title else ""
+            messagebox.showinfo("COPIED TO CLIPBOARD", f"{title} copied successfully:\n\n{val}{extra_msg}")
 
     def build_client_tab(self, parent, mode):
         container = tk.Frame(parent, bg=BG_PANEL, highlightbackground=NEON_CYAN, highlightthickness=1, padx=14, pady=10)
