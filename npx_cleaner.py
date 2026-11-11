@@ -231,43 +231,42 @@ class NPXCleanerApp:
         self.clean_btn.pack(side="right", fill="x", expand=True, padx=(10, 0), ipady=6)
 
     def init_audio_stream(self):
+        """Initializes reliable 8-bit retro chiptune playback using a built-in synth loop."""
         def worker():
             if not PYGAME_AVAILABLE:
                 self.log("[AUDIO] pygame not installed. Chiptune playback disabled.", tag="pink")
                 return
             try:
-                import urllib.request
-                pygame.mixer.init(frequency=22050, size=-16, channels=2)
-                audio_path = os.path.join(os.path.expanduser("~"), ".npx_chiptune_cache.mp3")
-                if not os.path.exists(audio_path) or os.path.getsize(audio_path) < 1000:
-                    req = urllib.request.Request(CHIPTUNE_URL, headers={'User-Agent': 'Mozilla/5.0'})
-                    with urllib.request.urlopen(req) as response, open(audio_path, 'wb') as out_file:
-                        out_file.write(response.read())
-                pygame.mixer.music.load(audio_path)
-                pygame.mixer.music.set_volume(0.15)
-                pygame.mixer.music.play(-1)
-                self.log("[AUDIO] 8-bit NCS Chiptune stream active.", tag="green")
+                import numpy as np
+                pygame.mixer.init(frequency=22050, size=-16, channels=1)
+                
+                # Generate a classic 8-bit retro arcade background arpeggio loop (Chiptune style)
+                sample_rate = 22050
+                notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 659.25] # C5, E5, G5, C6, G5, E5
+                melody_data = []
+                
+                for freq in notes:
+                    t = np.linspace(0, 0.12, int(sample_rate * 0.12), endpoint=False)
+                    # Square wave formula for authentic 8-bit chiptune sound
+                    wave = np.sign(np.sin(2 * np.pi * freq * t)) * 0.08
+                    melody_data.append(wave)
+                
+                # Add a brief pause between loops
+                pause = np.zeros(int(sample_rate * 0.2))
+                melody_data.append(pause)
+                
+                full_track = np.concatenate(melody_data)
+                audio_array = np.int16(full_track * 32767)
+                
+                # Create looping sound object
+                self.chiptune_sound = pygame.sndarray.make_sound(audio_array)
+                self.chi_channel = self.chiptune_sound.play(loops=-1)
+                
+                self.log("[AUDIO] 8-bit Chiptune synthesizer active.", tag="green")
             except Exception as e:
-                self.log(f"[AUDIO] Stream failed ({e}). Generating fallback chiptune...", tag="pink")
-                self.play_fallback_tone()
+                self.log(f"[AUDIO] Audio initialization error: {e}", tag="pink")
 
         threading.Thread(target=worker, daemon=True).start()
-
-    def play_fallback_tone(self):
-        try:
-            import numpy as np
-            sample_rate = 22050
-            t = np.linspace(0, 0.15, int(sample_rate * 0.15), endpoint=False)
-            for freq in [523.25, 659.25, 783.99, 1046.50]:
-                note = np.sin(2 * np.pi * freq * t) * 0.1
-                audio = np.int16(note * 32767)
-                stereo = np.column_stack((audio, audio))
-                sound = pygame.sndarray.make_sound(stereo)
-                sound.play()
-                pygame.time.delay(120)
-            self.log("[AUDIO] 8-bit synthetic chiptune fallback active.", tag="green")
-        except Exception:
-            pass
 
     def toggle_mute(self):
         if not PYGAME_AVAILABLE:
@@ -275,11 +274,13 @@ class NPXCleanerApp:
         try:
             self.is_muted = not self.is_muted
             if self.is_muted:
-                pygame.mixer.music.pause()
+                if hasattr(self, 'chi_channel') and self.chi_channel:
+                    self.chi_channel.pause()
                 self.mute_btn.config(text="[ AUDIO: MUTED ]", fg=NEON_PINK, highlightbackground=NEON_PINK)
                 self.log("[AUDIO] Chiptune audio muted.", tag="pink")
             else:
-                pygame.mixer.music.unpause()
+                if hasattr(self, 'chi_channel') and self.chi_channel:
+                    self.chi_channel.unpause()
                 self.mute_btn.config(text="[ AUDIO: 8-BIT ACTIVE ]", fg=MATRIX_GREEN, highlightbackground=MATRIX_GREEN)
                 self.log("[AUDIO] Chiptune audio resumed.", tag="green")
         except Exception:
