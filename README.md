@@ -1,29 +1,24 @@
-<div align="center">
-
-![NPX-CLEANER NuPixel Cyberpunk Banner](./banner.svg)
+```text
+╔══════════════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                          ║
+║  ███╗   ██╗██████╗ ██╗  ██╗      ██████╗██╗     ███████╗ █████╗ ███╗   ██╗███████╗██████╗ ║
+║  ████╗  ██║██╔══██╗╚██╗██╔╝     ██╔════╝██║     ██╔════╝██╔══██╗████╗  ██║██╔════╝██╔══██╗║
+║  ██╔██╗ ██║██████╔╝ ╚███╔╝█████╗██║     ██║     █████╗  ███████║██╔██╗ ██║█████╗  ██████╔╝║
+║  ██║╚██╗██║██╔═══╝  ██╔██╗╚════╝██║     ██║     ██╔══╝  ██╔══██║██║╚██╗██║██╔══╝  ██╔══██╗║
+║  ██║ ╚████║██║     ██╔╝ ██╗     ╚██████╗███████╗███████╗██║  ██║██║ ╚████║███████╗██║  ██║║
+║  ╚═╝  ╚═══╝╚═╝     ╚═╝  ╚═╝      ╚═════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝║
+║                                                                                          ║
+║             [ NUPIXEL // NEXT-GEN FIVEM CACHE PURGE & OPTIMIZER // CICADA ]              ║
+╚══════════════════════════════════════════════════════════════════════════════════════════╝
+```
 
 <div align="center">
 
 ### `SYS.ARCHITECT: CICADA` &nbsp;//&nbsp; `BUILD: LEGACY + ENHANCED (GEN9)`
 
-[![Platform](https://shields.io)](../../releases)
-[![Python](https://shields.io)](https://python.org)
-[![Theme](https://shields.io)](https://nupixel.xyz)
-[![License](https://shields.io)](./LICENSE)
-
-*A high-contrast, neon-infused Windows utility engineered to purge corrupted FiveM caches, terminate locked client threads, and boost frame stability across both **FiveM Legacy** and **FiveM Enhanced (Gen9)**.*
-
-</div>
-
-
-
-
-### `SYS.ARCHITECT: CICADA` &nbsp;//&nbsp; `BUILD: LEGACY + ENHANCED (GEN9)`
-
-[![Platform](https://shields.io)](https://github.com)
-[![Python](https://shields.io)](https://python.org)
-[![Theme](https://shields.io)](https://nupixel.xyz)
-[![License](https://shields.io)](LICENSE)
+| 💠 `PLATFORM` | 🐍 `RUNTIME` | 🎨 `THEME` | 📜 `LICENSE` |
+| :---: | :---: | :---: | :---: |
+| **Windows 10 / 11** | **Python 3.11+** | **[NuPixel Cyberpunk](https://nupixel.xyz)** | **[MIT License](./LICENSE)** |
 
 *A high-contrast, neon-infused Windows utility engineered to purge corrupted FiveM caches, terminate locked client threads, and boost frame stability across both **FiveM Legacy** and **FiveM Enhanced (Gen9)**.*
 
@@ -72,7 +67,7 @@ No Python installation required. Grab the pre-compiled Windows binary straight f
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com.git
+git clone https://github.com
 cd npx-cleaner
 
 # 2. Install dependencies
