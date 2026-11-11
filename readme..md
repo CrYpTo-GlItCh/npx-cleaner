@@ -1,36 +1,61 @@
-**# 🛠️ Open Source FiveM Cache Cleaner
+# 🛠️ npx-cleaner
 
-A lightweight, automated Windows utility designed to clean up FiveM cache directories, terminate conflicting processes, and fix common client issues safely without deleting core data.
+An open-source, automated Windows utility designed to safely clean **FiveM (Legacy)** and **FiveM Enhanced (Gen9)** cache directories, terminate conflicting processes, and resolve client stability issues without deleting core game files.
 
-## ✨ Features
-* **Process Watchdog:** Automatically monitors and stops background instances of GTA V and FiveM to avoid file write locks.
-* **Component Selection:** Choose exactly what to clear (Main Cache, Server Assets, NUI Browser Storage, or DigitalEntitlements).
-* **Safe Recycling:** Deletes files using the Windows Recycle Bin (`send2trash`), making all operations 100% reversible.
-* **Real-time Diagnostics:** Instantly calculates folder sizes and shows a live activity log.
+**Author:** CICADA
 
-## 🚀 How to Run from Source
+---
+
+## ✨ Key Features
+
+* **Dual Build Support:** Dedicated tabs to manage and clean **FiveM (Legacy)** and **FiveM Enhanced (Gen9)** installations independently or simultaneously.
+* **Custom Path Configuration:** Auto-detects standard `AppData` directories and includes manual path entry, a **Browse** picker, and persistent saving (`npx_cleaner_config.json`) for custom drive installations.
+* **Process Environment Watchdog:** Continuously monitors background tasks for `FiveM.exe`, `FiveM_Enhanced.exe`, `GTA5.exe`, `GTA5_Enhanced.exe`, and `CitizenFX.exe` to prevent file lock errors, with one-click process termination.
+* **Granular Component Selection:** Toggle specific folders per build (`cache`, `server-cache`, `server-cache-priv`, `nui-storage`, and `logs`/`crashes`), plus a shared toggle for `DigitalEntitlements`.
+* **100% Reversible Safe Recycling:** Routes all deleted folders to the Windows Recycle Bin via `send2trash` so data can be restored anytime.
+* **Real-Time Diagnostics:** Displays live file counts, megabyte totals across profiles, directory validation status, and a built-in console log.
+
+---
+
+## 📥 Download (Pre-Built Executable)
+
+If you do not have Python installed, you can download the compiled Windows executable directly from GitHub:
+1. Open the **Actions** tab (or **Releases**) in this repository.
+2. Select the latest successful **Build npx-cleaner Executable** run.
+3. Download **`npx-cleaner-windows.zip`**, extract it, and run **`npx-cleaner.exe`**.
+
+---
+
+## 🚀 Running from Source
 
 1. Clone the repository:
    ```bash
    git clone https://github.com
-   cd FiveM-Cache-Fixer
+   cd npx-cleaner
    ```
-2. Install the requirements:
+2. Install the required dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-3. Run the application:
+3. Launch the application:
    ```bash
-   python fivem_cleaner.py
+   python npx_cleaner.py
    ```
 
-## 📦 How to Build the Standalone `.exe`
-To compile the script into a single executable file that your player base can use without needing Python installed, run:
+---
+
+## 📦 Building the Standalone Executable
+
+To compile `npx_cleaner.py` into a single standalone `.exe` locally:
+
 ```bash
-pyinstaller --onefile --noconsole fivem_cleaner.py
+pyinstaller --onefile --noconsole --name="npx-cleaner" npx_cleaner.py
 ```
-The standalone executable will be generated inside the `/dist` directory.
+
+The compiled executable will be placed inside the **`dist/`** folder as `npx-cleaner.exe`.
+
+---
 
 ## 📄 License
-This project is licensed under the MIT License - see the LICENSE file for details.
-**
+
+This project is open-source and licensed under the **MIT License**.
