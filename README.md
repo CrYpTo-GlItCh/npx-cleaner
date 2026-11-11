@@ -1,16 +1,15 @@
 <div align="center">
 
-<!-- Cyberpunk Neon ASCII Banner -->
-<img src="banner.svg" width="100%" alt="NPX-CLEANER NuPixel Cyberpunk Banner"/>
+![NPX-CLEANER NuPixel Cyberpunk Banner](./banner.svg)
 
 <div align="center">
 
 ### `SYS.ARCHITECT: CICADA` &nbsp;//&nbsp; `BUILD: LEGACY + ENHANCED (GEN9)`
 
-[![Platform](https://shields.io)](https://github.com)
+[![Platform](https://shields.io)](../../releases)
 [![Python](https://shields.io)](https://python.org)
 [![Theme](https://shields.io)](https://nupixel.xyz)
-[![License](https://shields.io)](LICENSE)
+[![License](https://shields.io)](./LICENSE)
 
 *A high-contrast, neon-infused Windows utility engineered to purge corrupted FiveM caches, terminate locked client threads, and boost frame stability across both **FiveM Legacy** and **FiveM Enhanced (Gen9)**.*
 
