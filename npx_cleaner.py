@@ -17,7 +17,7 @@ TARGET_PROCESSES = [
 
 CONFIG_FILE = "npx_cleaner_config.json"
 
-# NuPixel Cyberpunk Theme Palette
+# NuPixel / iO33 Cyberpunk Theme Palette
 BG_DARK = "#07070c"
 BG_PANEL = "#0e0e18"
 BG_INPUT = "#151524"
@@ -32,8 +32,8 @@ TEXT_MUTED = "#64748b"
 class NPXCleanerApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("NPX-CLEANER // NUPIXEL CYBERPUNK OPTIMIZER")
-        self.root.geometry("620x780")
+        self.root.title("NPX-CLEANER v1.0.33 // iO33 CYBERPUNK OPTIMIZER")
+        self.root.geometry("620x790")
         self.root.resizable(False, False)
         self.root.configure(bg=BG_DARK)
 
@@ -136,14 +136,14 @@ class NPXCleanerApp:
         title_row = tk.Frame(banner_frame, bg=BG_PANEL)
         title_row.pack()
 
-        self.neon_prefix = tk.Label(title_row, text="[ NUPIXEL // ", font=("Consolas", 16, "bold"), bg=BG_PANEL, fg=NEON_PINK)
+        self.neon_prefix = tk.Label(title_row, text="[ iO33 // ", font=("Consolas", 16, "bold"), bg=BG_PANEL, fg=NEON_PINK)
         self.neon_prefix.pack(side="left")
         self.neon_title = tk.Label(title_row, text="NPX-CLEANER", font=("Consolas", 18, "bold"), bg=BG_PANEL, fg=NEON_CYAN)
         self.neon_title.pack(side="left")
         self.neon_suffix = tk.Label(title_row, text=" ]", font=("Consolas", 16, "bold"), bg=BG_PANEL, fg=NEON_PINK)
         self.neon_suffix.pack(side="left")
 
-        self.sub_banner = tk.Label(banner_frame, text="SYS.ARCHITECT: CICADA  |  DUAL LEGACY & GEN9 CACHE PROTOCOL", font=("Consolas", 8, "bold"), bg=BG_PANEL, fg=TEXT_MUTED)
+        self.sub_banner = tk.Label(banner_frame, text="PUBLISHER: iO33  |  VERSION: 1.0.33  |  DUAL LEGACY & GEN9 CACHE PROTOCOL", font=("Consolas", 8, "bold"), bg=BG_PANEL, fg=TEXT_MUTED)
         self.sub_banner.pack(pady=(3, 0))
 
         self.proc_frame = tk.Frame(self.root, bg=BG_PANEL, highlightbackground=NEON_PINK, highlightthickness=1, padx=12, pady=8)
@@ -194,7 +194,7 @@ class NPXCleanerApp:
         term_border = tk.Frame(self.root, bg=BG_DARK, highlightbackground=MATRIX_GREEN, highlightthickness=1)
         term_border.pack(fill="x", padx=16, pady=4)
 
-        term_top = tk.Label(term_border, text=" MATRIX_TERMINAL // NPX_SYS_LOG", font=("Consolas", 8, "bold"), bg="#031206", fg=MATRIX_GREEN, anchor="w")
+        term_top = tk.Label(term_border, text=" iO33_TERMINAL // v1.0.33 SYS_LOG", font=("Consolas", 8, "bold"), bg="#031206", fg=MATRIX_GREEN, anchor="w")
         term_top.pack(fill="x")
 
         self.log_text = tk.Text(term_border, height=8, width=72, font=("Consolas", 9), bg="#030804", fg=MATRIX_GREEN, insertbackground=MATRIX_GREEN, relief="flat", padx=6, pady=4)
@@ -203,7 +203,7 @@ class NPXCleanerApp:
         self.log_text.tag_configure("cyan", foreground=NEON_CYAN)
         self.log_text.tag_configure("pink", foreground=NEON_PINK)
 
-        self.log("BOOT SEQUENCE COMPLETE // NUPIXEL UI LOADED.", tag="cyan")
+        self.log("BOOT SEQUENCE COMPLETE // iO33 v1.0.33 LOADED.", tag="cyan")
         self.log("READY FOR CACHE PURGE. CUSTOMIZE PATHS OR EXECUTE.", tag="green")
 
         btn_frame = tk.Frame(self.root, bg=BG_DARK)
