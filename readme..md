@@ -1,4 +1,4 @@
-# 🛠️ Open Source FiveM Cache Fixer & Cleaner
+**# 🛠️ Open Source FiveM Cache Cleaner
 
 A lightweight, automated Windows utility designed to clean up FiveM cache directories, terminate conflicting processes, and fix common client issues safely without deleting core data.
 
@@ -33,3 +33,4 @@ The standalone executable will be generated inside the `/dist` directory.
 
 ## 📄 License
 This project is licensed under the MIT License - see the LICENSE file for details.
+**
