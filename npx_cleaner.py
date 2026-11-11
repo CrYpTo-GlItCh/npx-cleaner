@@ -7,7 +7,6 @@ from tkinter import ttk, messagebox, filedialog
 import psutil
 from send2trash import send2trash
 
-# Optional audio backend initialization using pygame
 try:
     import pygame
     PYGAME_AVAILABLE = True
@@ -105,11 +104,12 @@ class NPXCleanerApp:
 
     def detect_enhanced_path(self, local_app):
         candidates = [
+            os.path.join(local_app, "FiveM for GTAV Enhanced", "FiveM.app", "data"),
+            os.path.join(local_app, "FiveM for GTAV Enhanced"),
             os.path.join(local_app, "FiveM Enhanced", "FiveM.app", "data"),
             os.path.join(local_app, "FiveM_Enhanced", "FiveM.app", "data"),
-            os.path.join(local_app, "FiveM", "FiveM Enhanced.app", "data"),
             os.path.join(local_app, "FiveM Enhanced", "data"),
-            os.path.join(local_app, "FiveM for GTAV Enhanced", "FiveM.app", "data")
+            os.path.join(local_app, "FiveM for GTAV Enhanced", "data")
         ]
         for path in candidates:
             if os.path.exists(path):
@@ -155,7 +155,6 @@ class NPXCleanerApp:
         self.sub_banner = tk.Label(banner_frame, text="PUBLISHER: iO33  |  VERSION: 1.0.33  |  DUAL LEGACY & GEN9 CACHE PROTOCOL", font=("Consolas", 8, "bold"), bg=BG_PANEL, fg=TEXT_MUTED)
         self.sub_banner.pack(pady=(3, 0))
 
-        # Audio Control Widget Panel inside UI
         audio_widget_frame = tk.Frame(banner_frame, bg=BG_PANEL)
         audio_widget_frame.pack(pady=(8, 0))
 
@@ -232,25 +231,43 @@ class NPXCleanerApp:
         self.clean_btn.pack(side="right", fill="x", expand=True, padx=(10, 0), ipady=6)
 
     def init_audio_stream(self):
-        """Downloads and streams background 8-bit chiptune audio in a background thread."""
         def worker():
             if not PYGAME_AVAILABLE:
                 self.log("[AUDIO] pygame not installed. Chiptune playback disabled.", tag="pink")
                 return
             try:
                 import urllib.request
-                pygame.mixer.init()
+                pygame.mixer.init(frequency=22050, size=-16, channels=2)
                 audio_path = os.path.join(os.path.expanduser("~"), ".npx_chiptune_cache.mp3")
-                if not os.path.exists(audio_path):
-                    urllib.request.urlretrieve(CHIPTUNE_URL, audio_path)
+                if not os.path.exists(audio_path) or os.path.getsize(audio_path) < 1000:
+                    req = urllib.request.Request(CHIPTUNE_URL, headers={'User-Agent': 'Mozilla/5.0'})
+                    with urllib.request.urlopen(req) as response, open(audio_path, 'wb') as out_file:
+                        out_file.write(response.read())
                 pygame.mixer.music.load(audio_path)
-                pygame.mixer.music.set_volume(0.15)  # Comfortable 15% volume
-                pygame.mixer.music.play(-1)  # Infinite loop
+                pygame.mixer.music.set_volume(0.15)
+                pygame.mixer.music.play(-1)
                 self.log("[AUDIO] 8-bit NCS Chiptune stream active.", tag="green")
             except Exception as e:
-                self.log(f"[AUDIO] Could not initialize audio stream: {e}", tag="pink")
+                self.log(f"[AUDIO] Stream failed ({e}). Generating fallback chiptune...", tag="pink")
+                self.play_fallback_tone()
 
         threading.Thread(target=worker, daemon=True).start()
+
+    def play_fallback_tone(self):
+        try:
+            import numpy as np
+            sample_rate = 22050
+            t = np.linspace(0, 0.15, int(sample_rate * 0.15), endpoint=False)
+            for freq in [523.25, 659.25, 783.99, 1046.50]:
+                note = np.sin(2 * np.pi * freq * t) * 0.1
+                audio = np.int16(note * 32767)
+                stereo = np.column_stack((audio, audio))
+                sound = pygame.sndarray.make_sound(stereo)
+                sound.play()
+                pygame.time.delay(120)
+            self.log("[AUDIO] 8-bit synthetic chiptune fallback active.", tag="green")
+        except Exception:
+            pass
 
     def toggle_mute(self):
         if not PYGAME_AVAILABLE:
@@ -294,7 +311,7 @@ class NPXCleanerApp:
 
         folders = [
             ("cache", "Main Client Cache [cache]", True),
-            ("server-cache", "Server Assets Cache [server-cache]", True),
+            ("server-cache", "Server Assets Cache [server-cache / servercache]", True),
             ("server-cache-priv", "Private Server Cache [server-cache-priv]", True),
             ("nui-storage", "NUI Browser & UI Storage [nui-storage]", True),
             ("logs", "Crash & Client Logs [logs / crashes]", False)
@@ -415,6 +432,11 @@ class NPXCleanerApp:
                             os.path.join(parent_app_dir, "logs"),
                             os.path.join(parent_app_dir, "crashes")
                         ]
+                    elif folder_key == "server-cache":
+                        target_paths = [
+                            os.path.join(base_data_dir, "server-cache"),
+                            os.path.join(base_data_dir, "servercache")
+                        ]
                     else:
                         target_paths = [os.path.join(base_data_dir, folder_key)]
 
@@ -509,6 +531,11 @@ class NPXCleanerApp:
                         target_paths = [
                             os.path.join(parent_app_dir, "logs"),
                             os.path.join(parent_app_dir, "crashes")
+                        ]
+                    elif folder_key == "server-cache":
+                        target_paths = [
+                            os.path.join(base_data_dir, "server-cache"),
+                            os.path.join(base_data_dir, "servercache")
                         ]
                     else:
                         target_paths = [os.path.join(base_data_dir, folder_key)]
