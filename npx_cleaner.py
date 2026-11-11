@@ -231,56 +231,45 @@ class NPXCleanerApp:
         self.clean_btn.pack(side="right", fill="x", expand=True, padx=(10, 0), ipady=6)
 
     def init_audio_stream(self):
-        """Initializes reliable 8-bit retro chiptune playback using a built-in synth loop."""
+        """Initializes a reliable background 8-bit chiptune loop using native Windows sound."""
         def worker():
-            if not PYGAME_AVAILABLE:
-                self.log("[AUDIO] pygame not installed. Chiptune playback disabled.", tag="pink")
-                return
+            import time
             try:
-                import numpy as np
-                pygame.mixer.init(frequency=22050, size=-16, channels=1)
+                import winsound
+                # Classic 8-bit arcade arpeggio notes (Frequency in Hz, Duration in ms)
+                notes = [
+                    (523, 120), (659, 120), (784, 120), (1046, 200),
+                    (784, 120), (659, 120), (523, 200), (392, 200)
+                ]
+                self.audio_running = True
+                self.log("[AUDIO] 8-bit Chiptune loop active.", tag="green")
                 
-                # Generate a classic 8-bit retro arcade background arpeggio loop (Chiptune style)
-                sample_rate = 22050
-                notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 659.25] # C5, E5, G5, C6, G5, E5
-                melody_data = []
-                
-                for freq in notes:
-                    t = np.linspace(0, 0.12, int(sample_rate * 0.12), endpoint=False)
-                    # Square wave formula for authentic 8-bit chiptune sound
-                    wave = np.sign(np.sin(2 * np.pi * freq * t)) * 0.08
-                    melody_data.append(wave)
-                
-                # Add a brief pause between loops
-                pause = np.zeros(int(sample_rate * 0.2))
-                melody_data.append(pause)
-                
-                full_track = np.concatenate(melody_data)
-                audio_array = np.int16(full_track * 32767)
-                
-                # Create looping sound object
-                self.chiptune_sound = pygame.sndarray.make_sound(audio_array)
-                self.chi_channel = self.chiptune_sound.play(loops=-1)
-                
-                self.log("[AUDIO] 8-bit Chiptune synthesizer active.", tag="green")
+                while getattr(self, 'audio_running', True):
+                    for freq, duration in notes:
+                        if not getattr(self, 'audio_running', True) or getattr(self, 'is_muted', False):
+                            break
+                        try:
+                            winsound.Beep(freq, duration)
+                        except Exception:
+                            pass
+                        time.sleep(0.05)
+                    # Pause between loop iterations
+                    for _ in range(20):
+                        if not getattr(self, 'audio_running', True):
+                            break
+                        time.sleep(0.1)
             except Exception as e:
-                self.log(f"[AUDIO] Audio initialization error: {e}", tag="pink")
+                self.log(f"[AUDIO] Native audio failed: {e}", tag="pink")
 
         threading.Thread(target=worker, daemon=True).start()
 
     def toggle_mute(self):
-        if not PYGAME_AVAILABLE:
-            return
         try:
-            self.is_muted = not self.is_muted
+            self.is_muted = not getattr(self, 'is_muted', False)
             if self.is_muted:
-                if hasattr(self, 'chi_channel') and self.chi_channel:
-                    self.chi_channel.pause()
                 self.mute_btn.config(text="[ AUDIO: MUTED ]", fg=NEON_PINK, highlightbackground=NEON_PINK)
                 self.log("[AUDIO] Chiptune audio muted.", tag="pink")
             else:
-                if hasattr(self, 'chi_channel') and self.chi_channel:
-                    self.chi_channel.unpause()
                 self.mute_btn.config(text="[ AUDIO: 8-BIT ACTIVE ]", fg=MATRIX_GREEN, highlightbackground=MATRIX_GREEN)
                 self.log("[AUDIO] Chiptune audio resumed.", tag="green")
         except Exception:
