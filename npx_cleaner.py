@@ -4,6 +4,7 @@ import random
 import threading
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
+import webbrowser
 import psutil
 from send2trash import send2trash
 
@@ -33,7 +34,7 @@ class NPXCleanerApp:
     def __init__(self, root):
         self.root = root
         self.root.title("NPX-CLEANER v1.0.33 // iO33 CYBERPUNK OPTIMIZER")
-        self.root.geometry("620x840")
+        self.root.geometry("620x910")
         self.root.resizable(False, False)
         self.root.configure(bg=BG_DARK)
 
@@ -55,14 +56,12 @@ class NPXCleanerApp:
             "enhanced": tk.StringVar(value=str(enhanced_init))
         }
         self.path_status_lbls = {}
-        self.is_muted = False
 
         self.configure_styles()
         self.setup_ui()
         self.start_neon_flicker()
         self.scan_all_caches()
         self.check_running_processes()
-        self.init_audio_stream()
 
     def configure_styles(self):
         style = ttk.Style()
@@ -133,7 +132,7 @@ class NPXCleanerApp:
 
     def setup_ui(self):
         banner_frame = tk.Frame(self.root, bg=BG_PANEL, highlightbackground=NEON_CYAN, highlightthickness=1, pady=10)
-        banner_frame.pack(fill="x", padx=16, pady=(14, 8))
+        banner_frame.pack(fill="x", padx=16, pady=(12, 6))
 
         title_row = tk.Frame(banner_frame, bg=BG_PANEL)
         title_row.pack()
@@ -148,26 +147,33 @@ class NPXCleanerApp:
         self.sub_banner = tk.Label(banner_frame, text="PUBLISHER: iO33  |  VERSION: 1.0.33  |  DUAL LEGACY & GEN9 CACHE PROTOCOL", font=("Consolas", 8, "bold"), bg=BG_PANEL, fg=TEXT_MUTED)
         self.sub_banner.pack(pady=(3, 0))
 
-        audio_widget_frame = tk.Frame(banner_frame, bg=BG_PANEL)
-        audio_widget_frame.pack(pady=(8, 0))
+        # Gateway Actions & Links Toolbar
+        gateway_bar = tk.Frame(banner_frame, bg=BG_PANEL)
+        gateway_bar.pack(pady=(8, 0))
 
-        self.mute_btn = tk.Button(audio_widget_frame, text="[ AUDIO: 8-BIT ACTIVE ]", bg=BG_INPUT, fg=MATRIX_GREEN, activebackground=MATRIX_GREEN, activeforeground=BG_DARK, font=("Consolas", 9, "bold"), relief="flat", highlightbackground=MATRIX_GREEN, highlightthickness=1, cursor="hand2", command=self.toggle_mute)
-        self.mute_btn.pack(side="left", padx=6, ipadx=8, ipady=2)
+        nupixel_btn = tk.Button(gateway_bar, text="[ NUPIXEL.XYZ ]", bg=BG_INPUT, fg=NEON_CYAN, activebackground=NEON_CYAN, activeforeground=BG_DARK, font=("Consolas", 8, "bold"), relief="flat", highlightbackground=NEON_CYAN, highlightthickness=1, cursor="hand2", command=lambda: webbrowser.open("https://nupixel.xyz"))
+        nupixel_btn.pack(side="left", padx=4, ipadx=8, ipady=2)
 
-        self.proc_frame = tk.Frame(self.root, bg=BG_PANEL, highlightbackground=NEON_PINK, highlightthickness=1, padx=12, pady=8)
-        self.proc_frame.pack(fill="x", padx=16, pady=6)
+        connect_btn = tk.Button(gateway_bar, text=">> CONNECT SERVER <<", bg=BG_INPUT, fg=MATRIX_GREEN, activebackground=MATRIX_GREEN, activeforeground=BG_DARK, font=("Consolas", 8, "bold"), relief="flat", highlightbackground=MATRIX_GREEN, highlightthickness=1, cursor="hand2", command=lambda: webbrowser.open("cfx://connect/3yagxxz"))
+        connect_btn.pack(side="left", padx=4, ipadx=8, ipady=2)
+
+        donate_btn = tk.Button(gateway_bar, text="[ SUPPORT / DONATE ]", bg=BG_INPUT, fg=NEON_PINK, activebackground=NEON_PINK, activeforeground=BG_DARK, font=("Consolas", 8, "bold"), relief="flat", highlightbackground=NEON_PINK, highlightthickness=1, cursor="hand2", command=self.open_donation_window)
+        donate_btn.pack(side="left", padx=4, ipadx=8, ipady=2)
+
+        self.proc_frame = tk.Frame(self.root, bg=BG_PANEL, highlightbackground=NEON_PINK, highlightthickness=1, padx=12, pady=6)
+        self.proc_frame.pack(fill="x", padx=16, pady=4)
 
         proc_header = tk.Label(self.proc_frame, text=">> PROCESS ENVIRONMENT WATCHDOG", font=("Consolas", 9, "bold"), bg=BG_PANEL, fg=NEON_PINK)
         proc_header.pack(anchor="w")
 
         self.proc_status_lbl = tk.Label(self.proc_frame, text="SCANNING ACTIVE PROCESSES...", fg=NEON_CYAN, bg=BG_PANEL, font=("Consolas", 9, "bold"))
-        self.proc_status_lbl.pack(anchor="w", pady=(2, 6))
+        self.proc_status_lbl.pack(anchor="w", pady=(2, 4))
 
         self.kill_btn = tk.Button(self.proc_frame, text="[ TERMINATE RUNNING FIVEM / GTA PROCESSES ]", bg=BG_INPUT, fg=NEON_PINK, activebackground=NEON_PINK, activeforeground=BG_DARK, font=("Consolas", 9, "bold"), relief="flat", highlightbackground=NEON_PINK, highlightthickness=1, cursor="hand2", command=self.kill_processes)
-        self.kill_btn.pack(fill="x", ipady=3)
+        self.kill_btn.pack(fill="x", ipady=2)
 
         self.notebook = ttk.Notebook(self.root)
-        self.notebook.pack(fill="x", padx=16, pady=8)
+        self.notebook.pack(fill="x", padx=16, pady=6)
 
         self.tab_legacy = ttk.Frame(self.notebook, style="Dark.TFrame")
         self.tab_enhanced = ttk.Frame(self.notebook, style="Dark.TFrame")
@@ -178,11 +184,11 @@ class NPXCleanerApp:
         self.build_client_tab(self.tab_legacy, "legacy")
         self.build_client_tab(self.tab_enhanced, "enhanced")
 
-        self.shared_frame = tk.Frame(self.root, bg=BG_PANEL, highlightbackground=NEON_CYAN_DIM, highlightthickness=1, padx=12, pady=7)
+        self.shared_frame = tk.Frame(self.root, bg=BG_PANEL, highlightbackground=NEON_CYAN_DIM, highlightthickness=1, padx=12, pady=6)
         self.shared_frame.pack(fill="x", padx=16, pady=4)
 
         shared_hdr = tk.Label(self.shared_frame, text=">> SHARED CITIZENFX AUTHENTICATION NODE", font=("Consolas", 8, "bold"), bg=BG_PANEL, fg=NEON_CYAN)
-        shared_hdr.pack(anchor="w", pady=(0, 3))
+        shared_hdr.pack(anchor="w", pady=(0, 2))
 
         ent_row = tk.Frame(self.shared_frame, bg=BG_PANEL)
         ent_row.pack(fill="x")
@@ -196,8 +202,8 @@ class NPXCleanerApp:
         self.entitlement_lbl = tk.Label(ent_row, text="CALCULATING...", fg=TEXT_MUTED, bg=BG_PANEL, font=("Consolas", 9))
         self.entitlement_lbl.pack(side="right")
 
-        self.total_lbl = tk.Label(self.root, text="PAYLOAD SELECTED: 0.00 MB", font=("Consolas", 11, "bold"), bg=BG_DARK, fg=NEON_CYAN)
-        self.total_lbl.pack(pady=6)
+        self.total_lbl = tk.Label(self.root, text="PAYLOAD SELECTED: 0.00 MB", font=("Consolas", 10, "bold"), bg=BG_DARK, fg=NEON_CYAN)
+        self.total_lbl.pack(pady=4)
 
         term_border = tk.Frame(self.root, bg=BG_DARK, highlightbackground=MATRIX_GREEN, highlightthickness=1)
         term_border.pack(fill="x", padx=16, pady=4)
@@ -205,7 +211,7 @@ class NPXCleanerApp:
         term_top = tk.Label(term_border, text=" iO33_TERMINAL // v1.0.33 SYS_LOG", font=("Consolas", 8, "bold"), bg="#031206", fg=MATRIX_GREEN, anchor="w")
         term_top.pack(fill="x")
 
-        self.log_text = tk.Text(term_border, height=7, width=72, font=("Consolas", 9), bg="#030804", fg=MATRIX_GREEN, insertbackground=MATRIX_GREEN, relief="flat", padx=6, pady=4)
+        self.log_text = tk.Text(term_border, height=6, width=72, font=("Consolas", 9), bg="#030804", fg=MATRIX_GREEN, insertbackground=MATRIX_GREEN, relief="flat", padx=6, pady=4)
         self.log_text.pack(fill="x")
         self.log_text.tag_configure("green", foreground=MATRIX_GREEN)
         self.log_text.tag_configure("cyan", foreground=NEON_CYAN)
@@ -215,7 +221,7 @@ class NPXCleanerApp:
         self.log("READY FOR CACHE PURGE. CUSTOMIZE PATHS OR EXECUTE.", tag="green")
 
         btn_frame = tk.Frame(self.root, bg=BG_DARK)
-        btn_frame.pack(fill="x", padx=16, pady=(10, 14))
+        btn_frame.pack(fill="x", padx=16, pady=(8, 12))
 
         self.rescan_btn = tk.Button(btn_frame, text="[ RESCAN ]", bg=BG_PANEL, fg=NEON_CYAN, activebackground=NEON_CYAN, activeforeground=BG_DARK, font=("Consolas", 10, "bold"), relief="flat", highlightbackground=NEON_CYAN, highlightthickness=1, cursor="hand2", command=self.scan_all_caches)
         self.rescan_btn.pack(side="left", ipadx=12, ipady=6)
@@ -223,58 +229,50 @@ class NPXCleanerApp:
         self.clean_btn = tk.Button(btn_frame, text=">> EXECUTE SAFE RECYCLE PURGE <<", bg=NEON_PINK, fg="#ffffff", activebackground=NEON_CYAN, activeforeground=BG_DARK, font=("Consolas", 11, "bold"), relief="flat", cursor="hand2", command=self.confirm_and_clean)
         self.clean_btn.pack(side="right", fill="x", expand=True, padx=(10, 0), ipady=6)
 
-    def init_audio_stream(self):
-        """Initializes a reliable background 8-bit chiptune loop using native Windows sound."""
-        def worker():
-            import time
-            try:
-                import winsound
-                notes = [
-                    (523, 120), (659, 120), (784, 120), (1046, 200),
-                    (784, 120), (659, 120), (523, 200), (392, 200)
-                ]
-                self.audio_running = True
-                self.log("[AUDIO] 8-bit Chiptune loop active.", tag="green")
-                
-                while getattr(self, 'audio_running', True):
-                    for freq, duration in notes:
-                        if not getattr(self, 'audio_running', True):
-                            break
-                        while getattr(self, 'is_muted', False):
-                            time.sleep(0.2)
-                            if not getattr(self, 'audio_running', True):
-                                break
-                        try:
-                            winsound.Beep(freq, duration)
-                        except Exception:
-                            pass
-                        time.sleep(0.05)
-                    for _ in range(25):
-                        if not getattr(self, 'audio_running', True):
-                            break
-                        time.sleep(0.1)
-            except Exception as e:
-                self.log(f"[AUDIO] Native audio failed: {e}", tag="pink")
+    def open_donation_window(self):
+        """Opens a dedicated pop-up window for crypto and fiat contribution gateways."""
+        d_win = tk.Toplevel(self.root)
+        d_win.title("SUPPORT PROJECT EVOLUTION // DONATION GATEWAYS")
+        d_win.geometry("480x420")
+        d_win.resizable(False, False)
+        d_win.configure(bg=BG_DARK)
 
-        threading.Thread(target=worker, daemon=True).start()
+        tk.Label(d_win, text="SUPPORT NUPIXEL // iO33 ECOSYSTEM", font=("Consolas", 12, "bold"), bg=BG_DARK, fg=NEON_CYAN).pack(pady=(15, 5))
+        tk.Label(d_win, text="Click any gateway below to open or copy address to clipboard.", font=("Consolas", 8), bg=BG_DARK, fg=TEXT_MUTED).pack(pady=(0, 15))
 
-    def toggle_mute(self):
-        try:
-            self.is_muted = not getattr(self, 'is_muted', False)
-            if self.is_muted:
-                self.mute_btn.config(text="[ AUDIO: MUTED ]", fg=NEON_PINK, highlightbackground=NEON_PINK)
-                self.log("[AUDIO] Chiptune audio muted.", tag="pink")
-            else:
-                self.mute_btn.config(text="[ AUDIO: 8-BIT ACTIVE ]", fg=MATRIX_GREEN, highlightbackground=MATRIX_GREEN)
-                self.log("[AUDIO] Chiptune audio resumed.", tag="green")
-        except Exception:
-            pass
+        wallets = [
+            ("PayPal (FIAT / USD)", "https://paypal.me/iQuantum", "OPEN PAYPAL"),
+            ("Bitcoin (BTC)", "3JNvWL6hSaF3kMVKydfRhfrt82wXDDcaBV", "COPY BTC"),
+            ("Ethereum (ETH)", "0x314523ca487b9BDf158c2072701bdCfA89AbB0e2", "COPY ETH"),
+            ("USD Coin (USDC)", "0x4cc71b7c65eF753B8f497EBFb87eae40739a29F3", "COPY USDC"),
+            ("Dogecoin (DOGE)", "DDVRVa3BcTAb2UC7mEEXmT3wJmViKGMsP7", "COPY DOGE"),
+            ("Ripple (XRP) [Address]", "rw2ciyaNshpHe7bCHo4bRWq6pqqynnWKQg", "COPY XRP"),
+            ("Ripple (XRP) [Memo]", "4218899529", "COPY MEMO")
+        ]
+
+        for title, val, action_text in wallets:
+            row = tk.Frame(d_win, bg=BG_PANEL, highlightbackground=NEON_CYAN_DIM, highlightthickness=1, padx=10, pady=6)
+            row.pack(fill="x", padx=20, pady=4)
+
+            tk.Label(row, text=title, font=("Consolas", 9, "bold"), bg=BG_PANEL, fg=TEXT_LIGHT).pack(side="left")
+
+            btn = tk.Button(row, text=action_text, bg=BG_INPUT, fg=NEON_PINK, activebackground=NEON_PINK, activeforeground=BG_DARK, font=("Consolas", 8, "bold"), relief="flat", highlightbackground=NEON_PINK, highlightthickness=1, cursor="hand2", command=lambda v=val, t=title: self.handle_donation_click(v, t))
+            btn.pack(side="right", ipadx=6, ipady=1)
+
+    def handle_donation_click(self, val, title):
+        if val.startswith("http"):
+            webbrowser.open(val)
+            messagebox.showinfo("GATEWAY OPENED", f"Opened {title} link in your web browser.")
+        else:
+            self.root.clipboard_clear()
+            self.root.clipboard_append(val)
+            messagebox.showinfo("COPIED TO CLIPBOARD", f"{title} address copied successfully:\n\n{val}")
 
     def build_client_tab(self, parent, mode):
-        container = tk.Frame(parent, bg=BG_PANEL, highlightbackground=NEON_CYAN, highlightthickness=1, padx=10, pady=8)
+        container = tk.Frame(parent, bg=BG_PANEL, highlightbackground=NEON_CYAN, highlightthickness=1, padx=10, pady=6)
         container.pack(fill="both", expand=True)
 
-        dir_frame = tk.Frame(container, bg=BG_PANEL, pady=4)
+        dir_frame = tk.Frame(container, bg=BG_PANEL, pady=2)
         dir_frame.pack(fill="x")
 
         tk.Label(dir_frame, text="PATH:", font=("Consolas", 9, "bold"), bg=BG_PANEL, fg=NEON_CYAN).pack(side="left")
@@ -291,7 +289,7 @@ class NPXCleanerApp:
         reset_btn.pack(side="right", ipadx=6, ipady=1)
 
         path_status = tk.Label(container, text="PROBING DIRECTORY...", font=("Consolas", 8, "bold"), bg=BG_PANEL, fg=TEXT_MUTED)
-        path_status.pack(anchor="w", pady=(2, 6))
+        path_status.pack(anchor="w", pady=(2, 4))
         self.path_status_lbls[mode] = path_status
 
         folders = [
@@ -304,7 +302,7 @@ class NPXCleanerApp:
 
         for folder_key, label_text, default_checked in folders:
             row = tk.Frame(container, bg=BG_PANEL)
-            row.pack(fill="x", pady=3)
+            row.pack(fill="x", pady=2)
 
             var = tk.BooleanVar(value=default_checked)
             chk = ttk.Checkbutton(row, text=label_text, variable=var, style="Cyber.TCheckbutton", command=self.scan_all_caches)
