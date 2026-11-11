@@ -300,10 +300,15 @@ class NPXCleanerApp:
 
     def normalize_data_path(self, raw_path):
         cleaned = os.path.normpath(raw_path.strip().strip('"'))
-        if os.path.exists(os.path.join(cleaned, "FiveM.app", "data")):
-            return os.path.join(cleaned, "FiveM.app", "data")
-        if os.path.exists(os.path.join(cleaned, "data")):
-            return os.path.join(cleaned, "data")
+        for sub in ["data", os.path.join("FiveM.app", "data"), os.path.join("FiveM Application Data", "data")]:
+            candidate = os.path.join(cleaned, sub)
+            if os.path.exists(candidate):
+                return candidate
+        if os.path.exists(cleaned):
+            for entry in os.listdir(cleaned):
+                sub_data = os.path.join(cleaned, entry, "data")
+                if os.path.exists(sub_data):
+                    return sub_data
         return cleaned
 
     def apply_manual_path(self, mode):
