@@ -97,3 +97,28 @@ Your compiled binary will be generated at **`dist/npx-cleaner.exe`**.
 *Licensed under the MIT License*
 
 </div>
+
+---
+
+## ⚡ SUPPORT PROJECT EVOLUTION
+
+*Fuel our hardware and game servers.*
+
+| GATEWAY | NETWORK | ADDRESS / LINK *(Click Copy Icon on Hover)* |
+| :--- | :--- | :--- |
+| 💳 **PayPal** | `FIAT / USD` | **[paypal.me/iQuantum](https://paypal.me/iQuantum)** |
+| 🟠 **Bitcoin (BTC)** | `STANDARD NETWORK` | `3JNvWL6hSaF3kMVKydfRhfrt82wXDDcaBV` |
+| 🔷 **Ethereum (ETH)** | `ETH NETWORK` | `0x314523ca487b9BDf158c2072701bdCfA89AbB0e2` |
+| 💲 **USD Coin (USDC)** | `ETH NETWORK` | `0x4cc71b7c65eF753B8f497EBFb87eae40739a29F3` |
+| 🟡 **Dogecoin (DOGE)** | `DOGECOIN NETWORK` | `DDVRVa3BcTAb2UC7mEEXmT3wJmViKGMsP7` |
+| 💧 **Ripple (XRP)** | `RIPPLE NETWORK` | **Address:** `rw2ciyaNshpHe7bCHo4bRWq6pqqynnWKQg`<br>**Memo (REQUIRED):** `4218899529` |
+
+---
+
+<div align="center">
+
+**ENGINEERED BY `CICADA` FOR THE `NUPIXEL` COMMUNITY**  
+*Licensed under the MIT License*
+
+</div>
+
