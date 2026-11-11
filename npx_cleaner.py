@@ -7,6 +7,13 @@ from tkinter import ttk, messagebox, filedialog
 import psutil
 from send2trash import send2trash
 
+# Optional audio backend initialization using pygame
+try:
+    import pygame
+    PYGAME_AVAILABLE = True
+except ImportError:
+    PYGAME_AVAILABLE = False
+
 TARGET_PROCESSES = [
     "FiveM.exe",
     "FiveM_Enhanced.exe",
@@ -16,6 +23,7 @@ TARGET_PROCESSES = [
 ]
 
 CONFIG_FILE = "npx_cleaner_config.json"
+CHIPTUNE_URL = "https://cdns.framerusercontent.com/assets/2V5p18jR8q7JzQ4L9J6g8wM3c.mp3"
 
 # NuPixel / iO33 Cyberpunk Theme Palette
 BG_DARK = "#07070c"
@@ -33,7 +41,7 @@ class NPXCleanerApp:
     def __init__(self, root):
         self.root = root
         self.root.title("NPX-CLEANER v1.0.33 // iO33 CYBERPUNK OPTIMIZER")
-        self.root.geometry("620x790")
+        self.root.geometry("620x840")
         self.root.resizable(False, False)
         self.root.configure(bg=BG_DARK)
 
@@ -55,18 +63,19 @@ class NPXCleanerApp:
             "enhanced": tk.StringVar(value=str(enhanced_init))
         }
         self.path_status_lbls = {}
+        self.is_muted = False
 
         self.configure_styles()
         self.setup_ui()
         self.start_neon_flicker()
         self.scan_all_caches()
         self.check_running_processes()
+        self.init_audio_stream()
 
     def configure_styles(self):
         style = ttk.Style()
         style.theme_use("clam")
         
-        # Notebook & Tab Styling
         style.configure("TNotebook", background=BG_DARK, borderwidth=0, tabmargins=[0, 0, 0, 0])
         style.configure("TNotebook.Tab", background=BG_PANEL, foreground=TEXT_MUTED, padding=[16, 8], font=("Consolas", 10, "bold"), borderwidth=1)
         style.map("TNotebook.Tab", 
@@ -146,6 +155,13 @@ class NPXCleanerApp:
         self.sub_banner = tk.Label(banner_frame, text="PUBLISHER: iO33  |  VERSION: 1.0.33  |  DUAL LEGACY & GEN9 CACHE PROTOCOL", font=("Consolas", 8, "bold"), bg=BG_PANEL, fg=TEXT_MUTED)
         self.sub_banner.pack(pady=(3, 0))
 
+        # Audio Control Widget Panel inside UI
+        audio_widget_frame = tk.Frame(banner_frame, bg=BG_PANEL)
+        audio_widget_frame.pack(pady=(8, 0))
+
+        self.mute_btn = tk.Button(audio_widget_frame, text="[ AUDIO: 8-BIT ACTIVE ]", bg=BG_INPUT, fg=MATRIX_GREEN, activebackground=MATRIX_GREEN, activeforeground=BG_DARK, font=("Consolas", 9, "bold"), relief="flat", highlightbackground=MATRIX_GREEN, highlightthickness=1, cursor="hand2", command=self.toggle_mute)
+        self.mute_btn.pack(side="left", padx=6, ipadx=8, ipady=2)
+
         self.proc_frame = tk.Frame(self.root, bg=BG_PANEL, highlightbackground=NEON_PINK, highlightthickness=1, padx=12, pady=8)
         self.proc_frame.pack(fill="x", padx=16, pady=6)
 
@@ -197,7 +213,7 @@ class NPXCleanerApp:
         term_top = tk.Label(term_border, text=" iO33_TERMINAL // v1.0.33 SYS_LOG", font=("Consolas", 8, "bold"), bg="#031206", fg=MATRIX_GREEN, anchor="w")
         term_top.pack(fill="x")
 
-        self.log_text = tk.Text(term_border, height=8, width=72, font=("Consolas", 9), bg="#030804", fg=MATRIX_GREEN, insertbackground=MATRIX_GREEN, relief="flat", padx=6, pady=4)
+        self.log_text = tk.Text(term_border, height=7, width=72, font=("Consolas", 9), bg="#030804", fg=MATRIX_GREEN, insertbackground=MATRIX_GREEN, relief="flat", padx=6, pady=4)
         self.log_text.pack(fill="x")
         self.log_text.tag_configure("green", foreground=MATRIX_GREEN)
         self.log_text.tag_configure("cyan", foreground=NEON_CYAN)
@@ -214,6 +230,43 @@ class NPXCleanerApp:
 
         self.clean_btn = tk.Button(btn_frame, text=">> EXECUTE SAFE RECYCLE PURGE <<", bg=NEON_PINK, fg="#ffffff", activebackground=NEON_CYAN, activeforeground=BG_DARK, font=("Consolas", 11, "bold"), relief="flat", cursor="hand2", command=self.confirm_and_clean)
         self.clean_btn.pack(side="right", fill="x", expand=True, padx=(10, 0), ipady=6)
+
+    def init_audio_stream(self):
+        """Downloads and streams background 8-bit chiptune audio in a background thread."""
+        def worker():
+            if not PYGAME_AVAILABLE:
+                self.log("[AUDIO] pygame not installed. Chiptune playback disabled.", tag="pink")
+                return
+            try:
+                import urllib.request
+                pygame.mixer.init()
+                audio_path = os.path.join(os.path.expanduser("~"), ".npx_chiptune_cache.mp3")
+                if not os.path.exists(audio_path):
+                    urllib.request.urlretrieve(CHIPTUNE_URL, audio_path)
+                pygame.mixer.music.load(audio_path)
+                pygame.mixer.music.set_volume(0.15)  # Comfortable 15% volume
+                pygame.mixer.music.play(-1)  # Infinite loop
+                self.log("[AUDIO] 8-bit NCS Chiptune stream active.", tag="green")
+            except Exception as e:
+                self.log(f"[AUDIO] Could not initialize audio stream: {e}", tag="pink")
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def toggle_mute(self):
+        if not PYGAME_AVAILABLE:
+            return
+        try:
+            self.is_muted = not self.is_muted
+            if self.is_muted:
+                pygame.mixer.music.pause()
+                self.mute_btn.config(text="[ AUDIO: MUTED ]", fg=NEON_PINK, highlightbackground=NEON_PINK)
+                self.log("[AUDIO] Chiptune audio muted.", tag="pink")
+            else:
+                pygame.mixer.music.unpause()
+                self.mute_btn.config(text="[ AUDIO: 8-BIT ACTIVE ]", fg=MATRIX_GREEN, highlightbackground=MATRIX_GREEN)
+                self.log("[AUDIO] Chiptune audio resumed.", tag="green")
+        except Exception:
+            pass
 
     def build_client_tab(self, parent, mode):
         container = tk.Frame(parent, bg=BG_PANEL, highlightbackground=NEON_CYAN, highlightthickness=1, padx=10, pady=8)
